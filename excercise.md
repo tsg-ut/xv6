@@ -19,6 +19,14 @@ kern/printf.c,lib/printfmt.c,kern/console.cを読む。
 stack
 * kern/monitor.cのmon_backtrace()関数に再帰的にebp,eip,args 5つを出力させるプログラムをかけ。
 ```
+qemu-system-i386 -nographic -drive file=obj/kern/kernel.img,index=0,media=disk,format=raw -serial mon:stdio -gdb tcp::26000 -D qemu.log 
+6828 decimal is 15254 octal!
+entering test_backtrace 5
+entering test_backtrace 4
+entering test_backtrace 3
+entering test_backtrace 2
+entering test_backtrace 1
+entering test_backtrace 0
 ebp f010ff18 eip f0100087 args 00000000 00000000 00000000 00000000 f010099a 
 ebp f010ff38 eip f0100069 args 00000000 00000001 f010ff78 00000000 f010099a 
 ebp f010ff58 eip f0100069 args 00000001 00000002 f010ff98 00000000 f010099a 
@@ -28,5 +36,15 @@ ebp f010ffb8 eip f0100069 args 00000004 00000005 00000000 00010094 00010094
 ebp f010ffd8 eip f01000ea args 00000005 00001aac 00000644 00000000 00000000 
 ebp f010fff8 eip f010003e args 00111021 00000000 00000000 00000000 00000000 
 ebp 00000000 eip f000ff53 args f000e2c3 f000ff53 f000ff53 f000ff53 f000ff53 
+leaving test_backtrace 0
+leaving test_backtrace 1
+leaving test_backtrace 2
+leaving test_backtrace 3
+leaving test_backtrace 4
+leaving test_backtrace 5
+Welcome to the JOS kernel monitor!
+Type 'help' for a list of commands.
+K> 
+
 ```
 このような出力が得られるようにせよ。inc/x86.hのread_ebp()が便利である。
