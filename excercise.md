@@ -7,6 +7,47 @@ boot/boot.S,boot/main.cを読む。
 ### 2
 メモリについて。
 * objdumpでkernelとbootloaderのVMA/LMAを確認する。どう違うか？
+```
+.-(~/xv6/lab)-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------(yamaguchi@ispc2016)-
+`--> objdump -h obj/kern/kernel
+
+obj/kern/kernel:     ファイル形式 elf32-i386
+
+セクション:
+索引名          サイズ      VMA       LMA       File off  Algn
+  0 .text         00001967  f0100000  00100000  00001000  2**4
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .rodata       0000072c  f0101980  00101980  00002980  2**5
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  2 .stab         00003961  f01020ac  001020ac  000030ac  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .stabstr      000018e8  f0105a0d  00105a0d  00006a0d  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  4 .data         0000a300  f0108000  00108000  00009000  2**12
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 .bss          00000644  f0112300  00112300  00013300  2**5
+                  ALLOC
+  6 .comment      0000002b  00000000  00000000  00013300  2**0
+                  CONTENTS, READONLY
+.-(~/xv6/lab)-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------(yamaguchi@ispc2016)-
+`--> objdump -h obj/boot/boot.out
+
+obj/boot/boot.out:     ファイル形式 elf32-i386
+
+セクション:
+索引名          サイズ      VMA       LMA       File off  Algn
+  0 .text         0000017c  00007c00  00007c00  00000074  2**2
+                  CONTENTS, ALLOC, LOAD, CODE
+  1 .eh_frame     000000b0  00007d7c  00007d7c  000001f0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  2 .stab         000007b0  00000000  00000000  000002a0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      00000846  00000000  00000000  00000a50  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .comment      0000002b  00000000  00000000  00001296  2**0
+                  CONTENTS, READONLY
+```
+
 * bootloaderの中でLMAがboot/Makefragで0x7c00と適切に設定されていないとおかしな挙動をする箇所はどこか？
 * gdbでメモリの0x00100000を見て、BIOSからbootloader,bootloaderからkernelへとそれぞれ処理が移るときにどのような挙動をするか確認せよ。
 * kernelをgdbでステップ実行し、movl %eax, %cr0 命令の前後に0x00100000と0xf0100000がどのような状態になっているか確認せよ。仮想メモリが起動した直後に実行される一番初めの命令はなにか？kern/entry.Sでmovl %eax, %cr0をコメントアウトし確認せよ。
@@ -48,3 +89,4 @@ K>
 
 ```
 このような出力が得られるようにせよ。inc/x86.hのread_ebp()が便利である。
+
