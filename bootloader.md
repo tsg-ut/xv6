@@ -1,9 +1,7 @@
-### 4/27 xv6分科会 資料2
+## 4/27 xv6分科会 資料2
 
-#### ブートローダー
-boot/boot.S
-boot/main.c
-を読む。
+### ブートローダー
+boot/boot.S, boot/main.c を読む。
 
 BIOSによってロード・jmpされたブートローダーの処理は0x7c00から始まる(決まり)。
 プロテクトモードへの移行、起動ディスクからkernelを読み込みcallする役割をもつ。
@@ -15,7 +13,7 @@ b *0x7c00
 c
 ```
 
-* boot.S プロテクトモードへの移行
+### boot.S プロテクトモードへの移行
 ```
     # Switch from real to protected mode, using a bootstrap GDT
     # and segment translation that makes virtual addresses 
@@ -41,6 +39,7 @@ lgdtというのはGDTR(Grobal Discripter Table Register)にGDTのサイズと�
 ```
 ここで32bitプロテクトモードに移行している。
 cr0レジスタ(Control Register)の最下位ビットPEを1にすることによってプロテクトモードへ移行する。その後、32bitで次の命令にジャンプする。
+
 実はBIOSでもこの処理をしている！しかしブートローダーを呼び出す前に16bitリアルモードに戻っている。
 
 ```
@@ -50,9 +49,9 @@ cr0レジスタ(Control Register)の最下位ビットPEを1にすることに�
 ```
 ここでmain.cのbootmainという関数を呼んでいる
 
-* main.c
+### main.c
 main.cはカーネルをメモリに読み込んで、エントリーポイントにジャンプするということをしている。
-bootmain
+* bootmain
 ```
       // read 1st page off disk
       readseg((uint32_t) ELFHDR, SECTSIZE*8, 0); 
@@ -119,5 +118,5 @@ IDE device controllerは0x1F7がStatus registerなのでそれを読んでready�
 
 
 ### Reference
-[1] http://softwaretechnique.jp/OS_Development/kernel_loader2.html
-[2] http://pages.cs.wisc.edu/~remzi/OSTEP/file-devices.pdf
+1. http://softwaretechnique.jp/OS_Development/kernel_loader2.html
+2. http://pages.cs.wisc.edu/~remzi/OSTEP/file-devices.pdf

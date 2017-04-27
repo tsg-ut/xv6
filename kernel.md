@@ -1,10 +1,10 @@
-### 4/27 xv6分科会 資料3
+## 4/27 xv6分科会 kernel
 
-#### カーネル
+### カーネル
 /kernel 全部を読む。
 
-#### 仮想メモリ
-kern/entry.S
+### 仮想メモリ
+* kern/entry.S
 ```
 obj/kern/kernel:     ファイル形式 elf32-i386
 
@@ -25,9 +25,9 @@ obj/kern/kernel:     ファイル形式 elf32-i386
   6 .comment      0000002b  00000000  00000000  00013300  2**0
                   CONTENTS, READONLY
 ```
-kernelはELFですが、VMA(Virtual Memory Adress)とLMA(Load Memory Adress)が違うことがわかります。
-bootloaderはkernelのエントリーポイント(LMA)にcallしているので、kernelは0x00100000にロードされて実行されています。
-ここでは、kernelが仮想メモリを初期化し、自分自身を仮想メモリの0xf0100000にロードするまでを見ます。
+kernelはELFですが、VMA(Virtual Memory Adress)とLMA(Load Memory Adress)が違うことがわかる。
+bootloaderはkernelのエントリーポイント(LMA)にcallしているので、kernelは0x00100000にロードされて実行されている。
+* ここでは、kernelが仮想メモリを初期化し、自分自身を仮想メモリの0xf0100000にロードするまでを見る。
 
 ```
       movw    $0x1234,0x472           # warm boot
@@ -83,5 +83,5 @@ kern/printf.c, lib/printfmt.c, kern/console.cを読んで理解する。
 スタックはCTFでみんな詳しそう。
 
 ### Reference
-[1] http://caspar.hazymoon.jp/OpenBSD/arch/i386/i386/locore.html
-[2] https://en.wikipedia.org/wiki/Control_register#CR3
+1. http://caspar.hazymoon.jp/OpenBSD/arch/i386/i386/locore.html
+2. https://en.wikipedia.org/wiki/Control_register#CR3

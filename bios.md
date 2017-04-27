@@ -1,6 +1,6 @@
-### 4/27 xv6分科会 資料0 BIOS
+## 4/27 xv6分科会 BIOS
 
-#### アセンブリ
+### アセンブリ
 CTFだとintel記法しか読まないけど、最低限知っておきたいのは、
 ```
 mov %ax,%dx # %dx <= %ax
@@ -8,12 +8,13 @@ $0x64 # <= 即値の0x64
 jnz <= jump not zero
 ```
 Intel系のCPUはポートマップドI/O(メインメモリとは別のアドレス空間としてI/O空間がある)で、周辺機器のレジスタを接続してポートに信号を送ることによって通信をしている。
+
 ```
 inb $0x64,%al # [1] 参照。CPUの0x64ポートにキーボードコントローラーのステータスレジスタが割り振られている。
 outb %al,$0x64 # 0x64ポートにalを送る
 ```
 
-#### BIOS
+### BIOS
 ```
 cd lab
 make
@@ -32,16 +33,20 @@ The target architecture is assumed to be i8086
 [f000:e05b]    0xfe05b: cmpl   $0x0,%cs:0x6ac8
 ```
 
-BIOS ROMがマップされているメモリの一番上 0x000ffff0 から実行が始まる。こう決まっていることにより、PCが起動するたびにBIOSが実行されることが保証される。
-[f000:fff0] はCSレジスタがf000でIPがfff0ということ。
-リアルモードでは以下のようにアドレスが計算される。
+* BIOS ROMがマップされているメモリの一番上 0x000ffff0 から実行が始まる。こう決まっていることにより、PCが起動するたびにBIOSが実行されることが保証される。
+* [f000:fff0] はCSレジスタがf000でIPがfff0ということ。
+* リアルモードでは以下のようにアドレスが計算される。
+```
 adress = 16 * CS + IP
+```
 なのでこの場合だと
+```
 adress = 16 * 0xf000 + 0xfff0
     = 0xf0000 + 0xfff0
     = 0xffff0
+```
 
-* BIOSの処理
+### BIOSの処理
 [2] の図が秀逸。割り込みベクタの初期化と、周辺機器(キーボードなど)の初期化,ブートローダーの起動を行っている。
 
 ```
@@ -53,7 +58,9 @@ adress = 16 * 0xf000 + 0xfff0
 ```
 
 最初はRAMのdetectをする。
+```
 0xfd167:    out    %al,$0x70
+```
 I/O 0x70はCMOS Real Time Clock. 起動時にこれを読んで自分の時計を初期化する.
 
 ```
@@ -66,6 +73,6 @@ I/O 0x70はCMOS Real Time Clock. 起動時にこれを読んで自分の時計�
 しかしここはqemuのゾーンなのであまり真剣に読まなくて良さそう。
 
 #### Reference
-[1] http://caspar.hazymoon.jp/OpenBSD/annex/keyboard.html
-[2] http://softwaretechnique.jp/OS_Development/kernel_development02.html
-[3] http://wiki.osdev.org/CMOS
+1. http://caspar.hazymoon.jp/OpenBSD/annex/keyboard.html
+2. http://softwaretechnique.jp/OS_Development/kernel_development02.html
+3. http://wiki.osdev.org/CMOS
