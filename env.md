@@ -2,6 +2,7 @@
 
 ```
 mkdir xv6
+sudo install libsdl1.2-dev libtool-bin libglib2.0-dev libz-dev libpixman-1-dev build-essential gdb gcc-multilib
 cd xv6
 git clone http://web.mit.edu/ccutler/www/qemu.git -b 6.828-2.3.0
 cd qemu
