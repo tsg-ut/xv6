@@ -48,6 +48,28 @@ obj/boot/boot.out:     ファイル形式 elf32-i386
                   CONTENTS, READONLY
 ```
 
+```
+Breakpoint 1, 0x00100025 in ?? ()
+(gdb) si
+=> 0x100028:    mov    $0xf010002f,%eax
+0x00100028 in ?? ()
+(gdb) 
+=> 0x10002d:    jmp    *%eax
+0x0010002d in ?? ()
+(gdb) 
+=> 0xf010002f <relocated>:  mov    $0x0,%ebp
+relocated () at kern/entry.S:74
+74      movl    $0x0,%ebp           # nuke frame pointer
+(gdb) 
+=> 0xf0100034 <relocated+5>:    mov    $0xf0110000,%esp
+relocated () at kern/entry.S:77
+77      movl    $(bootstacktop),%esp
+(gdb) 
+=> 0xf0100039 <relocated+10>:   call   0xf010009d <i386_init>
+80      call    i386_init
+(gdb) 
+```
+
 * bootloaderの中でLMAがboot/Makefragで0x7c00と適切に設定されていないとおかしな挙動をする箇所はどこか？
 * gdbでメモリの0x00100000を見て、BIOSからbootloader,bootloaderからkernelへとそれぞれ処理が移るときにどのような挙動をするか確認せよ。
 * kernelをgdbでステップ実行し、movl %eax, %cr0 命令の前後に0x00100000と0xf0100000がどのような状態になっているか確認せよ。仮想メモリが起動した直後に実行される一番初めの命令はなにか？kern/entry.Sでmovl %eax, %cr0をコメントアウトし確認せよ。
