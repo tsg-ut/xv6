@@ -32,7 +32,7 @@ bootloaderはkernelのエントリーポイント(LMA)にcallしているので�
 ```
       movw    $0x1234,0x472           # warm boot
 ```
-BIOS Data Areaのアドレス0x472に0x1234を書き込むことによってwarm boot(メモリチャックを行わない)を設定している。[1]
+BIOS Data Areaのアドレス0x472に0x1234を書き込むことによってwarm boot(メモリチェックを行わない)を設定している。[1]
 
 ```
       # Load the physical address of entry_pgdir into cr3.  entry_pgdir
@@ -76,10 +76,10 @@ $(bootstacktop)というのはentry.Sの一番下のアドレスである。
 init.cのi386_initにジャンプする。
 
 
-#### コンソールに文字を表示する
+### コンソールに文字を表示する
 kern/printf.c, lib/printfmt.c, kern/console.cを読んで理解する。
 
-#### スタックの初期化
+### スタックの初期化
 スタックはCTFでみんな詳しそう。
 
 ### Reference

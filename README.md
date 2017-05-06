@@ -1,4 +1,4 @@
 # xv6-seminar
 本郷キャンパスでのTSGxv6分科会の資料だよ。
 
-testes
+lab1/にlab1の内容を移しました。
