@@ -260,6 +260,26 @@ make: *** [qemu-nox-gdb] Aborted (core dumped)
 ### 3
 kern/printf.c,lib/printfmt.c,kern/console.cを読む。
 * 未完成のコード断片がある。見つけ出して完成させよ。
+```
+diff --git a/lib/printfmt.c b/lib/printfmt.c
+index 28e01c9..af23abe 100644
+--- a/lib/printfmt.c
++++ b/lib/printfmt.c
+@@ -206,10 +206,9 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
+        // (unsigned) octal
+        case 'o':
+            // Replace this with your code.
+-           putch('X', putdat);
+-           putch('X', putdat);
+-           putch('X', putdat);
+-           break;
++           num = getuint(&ap, lflag);
++           base = 8;
++           goto number;
+ 
+        // pointer
+        case 'p':
+```
 
 ### 4
 stack
@@ -295,3 +315,43 @@ K>
 ```
 このような出力が得られるようにせよ。inc/x86.hのread_ebp()が便利である。
 
+```
+diff --git a/kern/monitor.c b/kern/monitor.c
+index e137e92..9ad74b4 100644
+--- a/kern/monitor.c
++++ b/kern/monitor.c
+@@ -58,6 +58,34 @@ int
+ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
+ {
+    // Your code here.
++    uint32_t ebp = read_ebp();
++    while(1){
++    cprintf("ebp %08x eip ",ebp);
++    uint32_t eip; 
++    asm volatile("movl 0x4(%1),%0" : "=r" (eip) : "r" (ebp));
++    cprintf("%08x ",eip);
++
++    int i=0;
++    cprintf("args ");
++
++        uint32_t arg;
++        asm volatile("movl 0x8(%1),%0" : "=r" (arg) : "r" (ebp));
++        cprintf("%08x ",arg);
++        asm volatile("movl 0xc(%1),%0" : "=r" (arg) : "r" (ebp));
++        cprintf("%08x ",arg);
++        asm volatile("movl 0x10(%1),%0" : "=r" (arg) : "r" (ebp));
++        cprintf("%08x ",arg);
++        asm volatile("movl 0x14(%1),%0" : "=r" (arg) : "r" (ebp));
++        cprintf("%08x ",arg);
++        asm volatile("movl 0x18(%1),%0" : "=r" (arg) : "r" (ebp));
++        cprintf("%08x ",arg);
++
++    cprintf("\n");
++    if(ebp == 0) break;
++    asm volatile("movl 0x0(%0),%0" : "=r" (ebp));
++    
++    }
++
+    return 0;
+ }
+```
